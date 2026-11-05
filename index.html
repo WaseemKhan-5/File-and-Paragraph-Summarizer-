@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SummarizeAI - Smart Summarizer</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          },
+          colors: {
+            ink: '#080d1c',
+            accent: '#8b7cff'
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .glass {
+      background: rgba(17, 26, 46, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      backdrop-filter: blur(18px);
+    }
+
+    .gradient-text {
+      background: linear-gradient(100deg, #fff, #b9b0ff, #5eead4);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .option.active {
+      color: white;
+      border-color: #8b7cff;
+      background: rgba(139,124,255,.18);
+    }
+
+    .drop-active {
+      border-color: #8b7cff !important;
+      background: rgba(139,124,255,.1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(100deg, #7868f6, #9b76f6, #5bcfc2);
+    }
+
+    .result-card {
+      animation: appear .3s ease;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-[#080d1c] text-slate-100">
+
+  <!-- Background -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 left-1/4 h-96 w-96 rounded-full bg-purple-600/20 blur-[120px]"></div>
+    <div class="absolute top-96 right-0 h-96 w-96 rounded-full bg-teal-400/10 blur-[120px]"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="border-b border-white/10">
+    <nav class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+
+      <div class="flex items-center gap-3 text-xl font-extrabold">
+        <span class="h-10 w-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-teal-300">
+          ✦
+        </span>
+        Summarize<span class="text-purple-300">AI</span>
+      </div>
+
+      <a href="#workspace"
+         class="border border-white/20 rounded-full px-5 py-2 text-sm hover:bg-white/10 transition">
+        Open Workspace ↗
+      </a>
+
+    </nav>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-16">
+
+    <!-- Hero -->
+    <section class="text-center max-w-4xl mx-auto">
+
+      <div class="inline-block border border-purple-400/30 bg-purple-400/10 text-purple-200 px-5 py-2 rounded-full text-xs font-bold tracking-widest mb-7">
+        ✧ LESS READING. MORE UNDERSTANDING.
+      </div>
+
+      <h1 class="text-5xl md:text-7xl font-extrabold leading-tight">
+        Summarize Anything.
+        <br>
+        <span class="gradient-text">Save Your Time.</span>
+      </h1>
+
+      <p class="text-slate-400 text-lg mt-6 leading-8">
+        Turn lengthy paragraphs and documents into clear,
+        useful takeaways. Upload a file or enter your own text.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-7 mt-8 text-sm text-slate-400">
+        <span>✓ Fast Summaries</span>
+        <span>✓ Multiple File Formats</span>
+        <span>✓ Easy Downloads</span>
+      </div>
+
+    </section>
+
+    <!-- Features -->
+    <section class="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto mt-14">
+
+      <div class="glass rounded-2xl p-6">
+        <div class="text-3xl mb-4">✍️</div>
+        <h3 class="font-bold text-lg">Text Summary</h3>
+        <p class="text-slate-400 text-sm mt-2">
+          Extract the important ideas from your paragraphs.
+        </p>
+      </div>
+
+      <div class="glass rounded-2xl p-6">
+        <div class="text-3xl mb-4">📁</div>
+        <h3 class="font-bold text-lg">File Summary</h3>
+        <p class="text-slate-400 text-sm mt-2">
+          Summarize PDF, DOCX and other supported files.
+        </p>
+      </div>
+
+      <div class="glass rounded-2xl p-6">
+        <div class="text-3xl mb-4">⬇️</div>
+        <h3 class="font-bold text-lg">Easy Download</h3>
+        <p class="text-slate-400 text-sm mt-2">
+          Copy or download your summary.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- Workspace -->
+    <section id="workspace"
+      class="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto mt-14">
+
+      <!-- Input -->
+      <div class="glass rounded-3xl p-7">
+
+        <p class="text-xs font-bold tracking-widest text-purple-300">
+          01 / INPUT
+        </p>
+
+        <h2 class="text-2xl font-bold mt-2">
+          Add Your Content
+        </h2>
+
+        <p class="text-sm text-slate-400 mt-2">
+          Upload a document or paste your paragraph.
+        </p>
+
+        <!-- Upload -->
+        <div id="uploadArea"
+          class="mt-7 border-2 border-dashed border-slate-600 rounded-2xl p-8 text-center transition">
+
+          <div class="text-4xl">☁️</div>
+
+          <h3 class="font-bold mt-4">
+            Drop your file here
+          </h3>
+
+          <p class="text-sm text-slate-400 mt-2">
+            or choose a file from your computer
+          </p>
+
+          <label for="fileInput"
+            class="inline-block cursor-pointer mt-5 bg-purple-500/20 text-purple-200 border border-purple-400/30 rounded-xl px-5 py-3 text-sm font-bold hover:bg-purple-500/30">
+            Choose File
+          </label>
+
+          <input type="file" id="fileInput"
+            class="hidden"
+            accept=".pdf,.docx,.txt,.md,.csv,.json">
+
+          <p class="text-xs text-slate-500 mt-4">
+            PDF · DOCX · TXT · MD · CSV · JSON
+          </p>
+
+        </div>
+
+        <!-- File Info -->
+        <div id="fileBox"
+          class="hidden items-center gap-3 bg-white/5 border border-white/10 rounded-xl p-4 mt-4">
+
+          <span class="text-2xl">📄</span>
+
+          <div class="flex-1 min-w-0">
+            <strong id="fileName" class="text-sm block truncate"></strong>
+            <small id="fileSize" class="text-slate-400"></small>
+          </div>
+
+          <button id="removeFile"
+            class="text-red-400 text-2xl">×</button>
+
+        </div>
+
+        <div id="fileStatus" class="text-xs mt-3 text-slate-400"></div>
+
+        <!-- Text -->
+        <div class="flex justify-between items-center mt-7">
+          <label class="font-bold text-sm" for="textInput">
+            Your Paragraph
+          </label>
+
+          <span id="charCount" class="text-xs text-slate-400">
+            0 characters
+          </span>
+        </div>
+
+        <textarea id="textInput"
+          rows="8"
+          placeholder="Paste or type your paragraph here..."
+          class="w-full mt-3 rounded-2xl bg-slate-950/60 border border-white/10 p-4 text-sm leading-7 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20">
+        </textarea>
+
+        <!-- Length -->
+        <h3 class="font-bold text-sm mt-7 mb-3">
+          Summary Length
+        </h3>
+
+        <div class="grid grid-cols-3 gap-2">
+
+          <button class="option active border border-white/10 rounded-xl p-3 text-sm"
+            data-length="short">
+            Short
+          </button>
+
+          <button class="option border border-white/10 rounded-xl p-3 text-sm"
+            data-length="medium">
+            Medium
+          </button>
+
+          <button class="option border border-white/10 rounded-xl p-3 text-sm"
+            data-length="detailed">
+            Detailed
+          </button>
+
+        </div>
+
+        <!-- Format -->
+        <h3 class="font-bold text-sm mt-6 mb-3">
+          Summary Format
+        </h3>
+
+        <div class="grid grid-cols-2 gap-2">
+
+          <button class="option active border border-white/10 rounded-xl p-3 text-sm"
+            data-format="paragraph">
+            Paragraph
+          </button>
+
+          <button class="option border border-white/10 rounded-xl p-3 text-sm"
+            data-format="bullets">
+            Bullet Points
+          </button>
+
+        </div>
+
+        <!-- Button -->
+        <button id="summarizeBtn"
+          class="btn-primary w-full rounded-xl py-4 font-bold mt-7 hover:brightness-110 transition">
+          ✨ Generate Summary →
+        </button>
+
+      </div>
+
+      <!-- Results -->
+      <div class="glass rounded-3xl p-7 min-h-[500px]">
+
+        <p class="text-xs font-bold tracking-widest text-teal-300">
+          02 / RESULTS
+        </p>
+
+        <h2 class="text-2xl font-bold mt-2">
+          Your Summary
+        </h2>
+
+        <p class="text-sm text-slate-400 mt-2">
+          Your key takeaways will appear here.
+        </p>
+
+        <div id="emptyState"
+          class="flex flex-col justify-center items-center text-center py-24">
+
+          <div class="text-6xl">🪄</div>
+
+          <h3 class="font-bold text-lg mt-6">
+            Ready When You Are
+          </h3>
+
+          <p class="text-sm text-slate-400 mt-2 max-w-xs">
+            Add your content and click Generate Summary.
+          </p>
+
+        </div>
+
+        <div id="results" class="hidden mt-7">
+          <div id="resultContainer" class="space-y-5"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <p class="text-center text-xs text-slate-500 mt-10">
+      This version uses an extractive summarization algorithm, not a cloud AI model.
+    </p>
+
+  </main>
+
+  <footer class="border-t border-white/10 text-center py-7 text-xs text-slate-500">
+    © 2026 SummarizeAI • Text & File Summarizer
+  </footer>
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
